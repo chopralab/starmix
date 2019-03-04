@@ -1,11 +1,10 @@
 #include <iostream>
 #include <memory>
-#include <lemon/lemon.hpp>
-#include <lemon/options.hpp>
-#include <spear/Molecule.hpp>
 #include "lemon/lemon.hpp"
+#include "lemon/options.hpp"
 #include "lemon/launch.hpp"
 #include "lemon/geometry.hpp"
+#include "spear/Molecule.hpp"
 #include "spear/scoringfunctions/Bernard12.hpp"
 #include "spear/atomtypes/IDATM.hpp"
 #include "spear/Grid.hpp"
