@@ -24,3 +24,16 @@ target_link_libraries(idatm_protein_name PRIVATE
 set_target_properties(idatm_protein_name PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
 
 install(TARGETS idatm_protein_name RUNTIME DESTINATION bin)
+
+add_executable(idatm_idatm idatm_idatm.cpp)
+
+target_link_libraries(idatm_idatm PRIVATE
+    lemon
+    chemfiles
+    spear
+    pthread
+)
+
+set_target_properties(idatm_idatm PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
+
+install(TARGETS idatm_idatm RUNTIME DESTINATION bin)
