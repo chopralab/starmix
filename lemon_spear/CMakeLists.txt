@@ -10,3 +10,17 @@ target_link_libraries(complete_score_pdb PRIVATE
 set_target_properties(complete_score_pdb PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
 
 install(TARGETS complete_score_pdb RUNTIME DESTINATION bin)
+
+
+add_executable(idatm_protein_name idatm_protein_name.cpp)
+
+target_link_libraries(idatm_protein_name PRIVATE
+    lemon
+    chemfiles
+    spear
+    pthread
+)
+
+set_target_properties(idatm_protein_name PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
+
+install(TARGETS idatm_protein_name RUNTIME DESTINATION bin)
