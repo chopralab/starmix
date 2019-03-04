@@ -13,13 +13,19 @@
 using Spear::Bernard12;
 using Spear::IDATM;
 
+typedef std::pair<std::string, size_t> DistanceBin;
+typedef std::map<DistanceBin, size_t> DistanceCounts;
+
 int main(int argc, char** argv) {
     lemon::Options o;
     o.parse_command_line(argc, argv);
 
-    auto worker = [](chemfiles::Frame entry,
+    auto bin_size = 0.001;
+
+    auto worker = [bin_size](chemfiles::Frame entry,
                      const std::string& pdbid) {
-        using idxset = std::unordered_set<size_t>;
+        DistanceCounts bins;
+
         // Selection phase
         auto smallm = lemon::select::small_molecules(entry);
 
@@ -29,7 +35,7 @@ int main(int argc, char** argv) {
         lemon::prune::cofactors(entry, smallm, lemon::common_fatty_acids);
 
         if (smallm.empty()) {
-            return std::string("");
+            return bins;
         }
 
         Spear::Molecule mol(std::move(entry));
@@ -39,7 +45,6 @@ int main(int argc, char** argv) {
         auto& topo = mol.frame().topology();
 
         // Output phase
-        std::string result;
         for (auto smallm_id : smallm) {
             for (auto& smallm_atom : topo.residues()[smallm_id]) {
                 auto neighbors = grid.neighbors(mol.frame().positions()[smallm_atom], 15.0);
@@ -84,16 +89,37 @@ int main(int argc, char** argv) {
                         continue;
                     }
 
-                    result += pdbid + "\t" + rec_res.name() +
-                              "_" + topo[rec_atom].name() + "\t" +
-                              Spear::atomtype_name_for_id<Spear::IDATM>(alltypes[smallm_atom]) +
-                              "\t" + std::to_string(dist) + "\n";
+                    auto bin_name = rec_res.name() + "_" +
+                              topo[rec_atom].name() + "\t" +
+                              Spear::atomtype_name_for_id<Spear::IDATM>(alltypes[smallm_atom]);
+
+                    auto dist_bin = static_cast<size_t>(std::floor(dist / bin_size));
+
+                    DistanceBin sbin = {bin_name, dist_bin};
+                    auto bin_iterator = bins.find(sbin);
+
+                    if (bin_iterator == bins.end()) {
+                        bins[sbin] = 1;
+                        continue;
+                    }
+
+                    ++(bin_iterator->second);
                 }
             }
         }
-        return result;
+        return bins;
     };
 
-    auto collector = lemon::print_combine(std::cout);
-    return lemon::launch(o, worker, collector);
+
+    DistanceCounts total;
+    auto collector = lemon::map_combine<DistanceCounts>(total);
+    lemon::launch(o, worker, collector);
+
+    for (const auto& i : total) {
+        std::cout << i.first.first << "\t"
+                  << static_cast<double>(i.first.second) * bin_size << "\t"
+                  << i.second << "\n";
+    }
+
+    return 0;
 }
