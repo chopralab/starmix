@@ -5,6 +5,7 @@
 #include "lemon/launch.hpp"
 #include "lemon/geometry.hpp"
 #include "spear/Molecule.hpp"
+#include "spear/Molecule_impl.hpp"
 #include "spear/scoringfunctions/Bernard12.hpp"
 #include "spear/atomtypes/IDATM.hpp"
 #include "spear/Grid.hpp"
@@ -75,7 +76,7 @@ int main(int argc, char** argv) {
 
         Spear::Molecule mol(std::move(entry));
         mol.add_atomtype<Spear::IDATM>(Spear::AtomType::GEOMETRY);
-        auto grid = Spear::Grid(mol.frame().positions());
+        auto grid = Spear::Grid(mol.positions());
 
         // Output phase
         std::string result;

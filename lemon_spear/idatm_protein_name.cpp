@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
         Spear::Molecule mol(std::move(entry));
         Spear::IDATM idatm(mol, Spear::AtomType::GEOMETRY);
         auto& alltypes = idatm.all_types();
-        auto& positions = mol.frame().positions();
+        auto& positions = mol.positions();
         auto& topo = mol.frame().topology();
         auto grid = Spear::Grid(positions);
 
