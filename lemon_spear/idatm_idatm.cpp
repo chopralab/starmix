@@ -3,8 +3,11 @@
 #include "lemon/options.hpp"
 #include "lemon/launch.hpp"
 #include "spear/Molecule.hpp"
+#include "spear/Molecule_impl.hpp"
+#include "spear/Graph_impl.hpp"
 #include "spear/atomtypes/IDATM.hpp"
 #include "spear/Grid.hpp"
+#include "spear/Geometry.hpp"
 
 using Spear::IDATM;
 using Spear::atomtype_name_for_id;
@@ -42,11 +45,11 @@ int main(int argc, char** argv) {
             return bins;
         }
 
-        Spear::Molecule mol(std::move(entry));
+        Spear::Molecule mol(entry);
         Spear::IDATM idatm(mol, Spear::AtomType::GEOMETRY);
         auto& alltypes = idatm.all_types();
         auto& positions = mol.positions();
-        auto& topo = mol.frame().topology();
+        auto& topo = mol.topology();
         auto grid = Spear::Grid(positions);
 
         // Output phase
@@ -54,7 +57,10 @@ int main(int argc, char** argv) {
             for (auto& smallm_atom : topo.residues()[smallm_id]) {
                 auto neighbors = grid.neighbors(positions[smallm_atom], max_dist);
                 for (auto rec_atom : neighbors) {
-                    auto dist = mol.frame().distance(smallm_atom, rec_atom);
+                    auto& smallm_atom_pos = mol[smallm_atom].position();
+                    auto& rec_atom_pos = mol[rec_atom].position();
+                    auto dist = Spear::distance(smallm_atom_pos, rec_atom_pos);
+
                     auto vdw_sum = van_der_waals<IDATM>(alltypes[rec_atom]) +
                                    van_der_waals<IDATM>(alltypes[smallm_atom]);
 

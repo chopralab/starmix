@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
             return std::string("");
         }
 
-        Spear::Molecule mol(std::move(entry));
+        Spear::Molecule mol(entry);
         mol.add_atomtype<Spear::IDATM>(Spear::AtomType::GEOMETRY);
         auto grid = Spear::Grid(mol.positions());
 
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
         std::string result;
         for (auto smallm_id : smallm) {
             result += pdbid + '\t';
-            result += mol.frame().topology().residues()[smallm_id].name() + '\t';
+            result += mol.topology().residues()[smallm_id].name() + '\t';
             for (auto& sf : rmcs) {
                 result += std::to_string(sf->score(grid, mol, smallm_id)) + '\t';
             }
