@@ -10,6 +10,7 @@ find_package(spear REQUIRED)
 find_package(lemon REQUIRED)
 find_package(chemfiles REQUIRED)
 find_package(OpenMM REQUIRED)
+find_package(pugixml REQUIRED)
 find_package(Boost REQUIRED COMPONENTS graph)
 
 add_subdirectory(lemon_spear)

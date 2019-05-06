@@ -4,8 +4,6 @@
 #include "lemon/options.hpp"
 #include "lemon/launch.hpp"
 #include "spear/Molecule.hpp"
-#include "spear/Molecule_impl.hpp"
-#include "spear/Graph_impl.hpp"
 #include "spear/atomtypes/IDATM.hpp"
 #include "spear/Grid.hpp"
 #include "spear/Geometry.hpp"
@@ -44,7 +42,6 @@ int main(int argc, char** argv) {
 
         Spear::Molecule mol(entry);
         Spear::IDATM idatm(mol, Spear::AtomType::GEOMETRY);
-        auto& alltypes = idatm.all_types();
         auto& positions = mol.positions();
         auto& topo = mol.topology();
         auto grid = Spear::Grid(positions);
@@ -100,7 +97,7 @@ int main(int argc, char** argv) {
 
                     auto bin_name = rec_res.name() + "_" +
                               topo[rec_atom].name() + "\t" +
-                              atomtype_name_for_id<IDATM>(alltypes[smallm_atom]);
+                              atomtype_name_for_id<IDATM>(idatm[smallm_atom]);
 
                     auto dist_bin = static_cast<size_t>(std::floor(dist / bin_size));
 

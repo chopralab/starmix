@@ -3,8 +3,6 @@
 #include "lemon/options.hpp"
 #include "lemon/launch.hpp"
 #include "spear/Molecule.hpp"
-#include "spear/Molecule_impl.hpp"
-#include "spear/Graph_impl.hpp"
 #include "spear/atomtypes/IDATM.hpp"
 #include "spear/Grid.hpp"
 #include "spear/Geometry.hpp"
@@ -47,7 +45,6 @@ int main(int argc, char** argv) {
 
         Spear::Molecule mol(entry);
         Spear::IDATM idatm(mol, Spear::AtomType::GEOMETRY);
-        auto& alltypes = idatm.all_types();
         auto& positions = mol.positions();
         auto& topo = mol.topology();
         auto grid = Spear::Grid(positions);
@@ -61,15 +58,15 @@ int main(int argc, char** argv) {
                     auto& rec_atom_pos = mol[rec_atom].position();
                     auto dist = Spear::distance(smallm_atom_pos, rec_atom_pos);
 
-                    auto vdw_sum = van_der_waals<IDATM>(alltypes[rec_atom]) +
-                                   van_der_waals<IDATM>(alltypes[smallm_atom]);
+                    auto vdw_sum = van_der_waals<IDATM>(idatm[rec_atom]) +
+                                   van_der_waals<IDATM>(idatm[smallm_atom]);
 
                     if (dist > max_dist || dist < vdw_sum * vdw_coef) {
                         continue;
                     }
 
-                    auto bin_name = atomtype_name_for_id<IDATM>(alltypes[rec_atom]) + "_" +
-                                    atomtype_name_for_id<IDATM>(alltypes[smallm_atom]);
+                    auto bin_name = atomtype_name_for_id<IDATM>(idatm[rec_atom]) + "_" +
+                                    atomtype_name_for_id<IDATM>(idatm[smallm_atom]);
 
                     auto dist_bin = static_cast<size_t>(std::floor(dist / bin_size));
 
