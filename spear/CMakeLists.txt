@@ -12,4 +12,4 @@ endfunction()
 
 add_spear_prog(score_all_residues.cpp)
 add_spear_prog(filter_carboxylic_acids.cpp)
-
+add_spear_prog(score_poses.cpp)
