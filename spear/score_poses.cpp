@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
 
     std::unordered_set<size_t> all_types;
     std::copy(types1->cbegin(), types1->cend(), std::inserter(all_types, all_types.begin()));
+    std::copy(types2->cbegin(), types2->cend(), std::inserter(all_types, all_types.begin()));
     all_types.erase(47);
     all_types.erase(48);
 
@@ -94,7 +95,7 @@ int main(int argc, char** argv) {
                                                       idatm_name));
     }
 
-    std::cout << "name\t";
+    std::cout << "name";
 
     auto print_names = [](std::string sf) {
         for (auto r = 4; r <= 15; r += 1) {
@@ -118,6 +119,7 @@ int main(int argc, char** argv) {
         auto frame = ltraj.read();
         
         std::cout << frame.get<chemfiles::Property::STRING>("name").value_or("XXXX");
+        std::cout << "\t";
 
         auto mol = Spear::Molecule(frame);
         //mol.remove_hydrogens();
