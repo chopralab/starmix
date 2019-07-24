@@ -1,3 +1,6 @@
+// StarMix: A collection of programs which use the CANDIY suite
+// Copyright (C) Purdue University -- BSD license
+
 #include <iostream>
 #include "spear/Molecule.hpp"
 #include "spear/FunctionalGroup.hpp"
